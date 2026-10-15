@@ -1,0 +1,32 @@
+name: e_kabadi_setu
+description: Offline-first e-waste collector and authorized recycler bridge prototype.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.5.0
+  image_picker: ^1.1.2
+  shared_preferences: ^2.5.3
+  geolocator: ^14.0.2
+  qr_flutter: ^4.1.0
+  flutter_tts: ^4.2.3
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  url_launcher: ^6.3.1
+  path_provider: ^2.1.5
+  pdf: ^3.11.1
+  printing: ^5.13.2
+  record: ^7.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

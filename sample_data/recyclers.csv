@@ -1,0 +1,4 @@
+recycler_id,name,facility_location,materials_accepted,authorization_details,authorization_status,contact,pickup_available,service_area,data_status
+REC-001,Maha Eco Recycler,"Pune, Maharashtra","Copper Cables|PCBs|Li-ion Batteries|Motors",MPCB/EW/2026/1042,DEMO_VERIFIED,+91-90000-10001,YES,Pune district,FICTIONAL
+REC-002,GreenLoop Authorized Facility,"Pimpri, Maharashtra","Copper Cables|LCD Panels|CRT Units|Mixed Plastics",MPCB/EW/2026/0871,DEMO_VERIFIED,+91-90000-10002,YES,Pune and Pimpri,FICTIONAL
+REC-003,Circular Metals Aggregator,"Bhosari, Maharashtra","Copper Cables|PCBs|Motors|Magnet Assemblies",MPCB/AGG/2026/0318,DEMO_VERIFIED,+91-90000-10003,NO,Bhosari,FICTIONAL

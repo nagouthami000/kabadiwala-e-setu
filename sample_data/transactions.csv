@@ -1,0 +1,3 @@
+lot_id,collector_id,material_category,weight,estimated_value,quoted_price,final_price,recycler_id,collection_location,handover_location,date_time,payment_status,transaction_status,data_status
+LOT-DEMO-001,COL-DEMO-01,Copper Cables,8,2640,2700,2700,REC-001,"Pune, Maharashtra","Pune, Maharashtra",2026-09-16T10:30:00+05:30,PAID,HANDED_OVER,DEMO_ONLY
+LOT-DEMO-002,COL-DEMO-01,PCBs,3.5,1470,1510,0,REC-003,"Pune, Maharashtra",,2026-09-16T12:10:00+05:30,PENDING,OFFER_ACCEPTED,DEMO_ONLY

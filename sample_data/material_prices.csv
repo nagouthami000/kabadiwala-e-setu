@@ -1,0 +1,9 @@
+material_category,sub_category,location,date,buying_price,market_low,market_high,unit,recycler_or_aggregator,source_status
+Copper Cables,Insulated mixed cable,"Pune, Maharashtra",2026-09-16,330,290,360,kg,Prototype reference,DEMO_ONLY
+PCBs,Mixed grade boards,"Pune, Maharashtra",2026-09-16,420,260,620,kg,Prototype reference,DEMO_ONLY
+Li-ion Batteries,Mixed small packs,"Pune, Maharashtra",2026-09-16,105,80,135,kg,Prototype reference,DEMO_ONLY
+Motors,Small mixed motors,"Pune, Maharashtra",2026-09-16,92,75,115,kg,Prototype reference,DEMO_ONLY
+LCD Panels,Mixed condition,"Pune, Maharashtra",2026-09-16,38,20,55,piece,Prototype reference,DEMO_ONLY
+CRT Units,Complete intact unit,"Pune, Maharashtra",2026-09-16,18,10,25,piece,Prototype reference,DEMO_ONLY
+Mixed Plastics,E-waste plastic housing,"Pune, Maharashtra",2026-09-16,22,14,28,kg,Prototype reference,DEMO_ONLY
+Magnet Assemblies,Mixed assemblies,"Pune, Maharashtra",2026-09-16,145,100,190,kg,Prototype reference,DEMO_ONLY
