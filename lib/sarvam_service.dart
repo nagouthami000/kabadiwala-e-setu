@@ -148,46 +148,141 @@ class SarvamAiService {
     required IndicLanguage language,
   }) async {
     final lower = speechQuery.toLowerCase();
-    
+
     // Dynamic mapping for all languages
     String detectedCategory = 'Copper Cables';
     double? detectedWeight;
-    String detectedCondition = speechQuery.trim();
+    // Default to a clean condition label — never dump raw transcript
+    String detectedCondition = 'Good working condition';
 
-    // Multi-language category recognition (Hindi, Marathi, English, Tamil, Telugu, Bengali etc.)
-    if (lower.contains('copper') || lower.contains('तांबा') || lower.contains('तांबे') || lower.contains('তামা') || lower.contains('செம்பு') || lower.contains('రాగి')) {
-      detectedCategory = 'Copper Cables';
-    } else if (lower.contains('pcb') || lower.contains('circuit') || lower.contains('बोर्ड') || lower.contains('मदरबोर्ड') || lower.contains('বোর্ড')) {
-      detectedCategory = 'PCBs';
-    } else if (lower.contains('battery') || lower.contains('बैटरी') || lower.contains('बॅटरी') || lower.contains('ব্যাটারি') || lower.contains('பேட்டரி')) {
-      detectedCategory = 'Li-ion Batteries';
-    } else if (lower.contains('motor') || lower.contains('मोटर') || lower.contains('মটর')) {
-      detectedCategory = 'Motors';
-    } else if (lower.contains('lcd') || lower.contains('screen') || lower.contains('स्क्रीन') || lower.contains('पैनल') || lower.contains('প্যানেল')) {
+    // ── Multi-language category recognition ──
+    // Laptop / Computer → LCD Panels
+    if (lower.contains('laptop') || lower.contains('computer') || lower.contains('लैपटॉप') ||
+        lower.contains('कंप्यूटर') || lower.contains('कम्प्युटर') || lower.contains('ল্যাপটপ') ||
+        lower.contains('லேப்டாப்') || lower.contains('ల్యాప్‌టాప్') || lower.contains('notebook')) {
       detectedCategory = 'LCD Panels';
-    } else if (lower.contains('crt') || lower.contains('tv') || lower.contains('टीवी') || lower.contains('कांच')) {
+    // Monitor / Screen / Display → LCD Panels
+    } else if (lower.contains('monitor') || lower.contains('lcd') || lower.contains('display') ||
+        lower.contains('screen') || lower.contains('मॉनिटर') || lower.contains('स्क्रीन') ||
+        lower.contains('पैनल') || lower.contains('মনিটর') || lower.contains('প্যানেল') ||
+        lower.contains('திரை') || lower.contains('మానిటర్')) {
+      detectedCategory = 'LCD Panels';
+    // Mobile / Phone / Tablet → Li-ion Batteries
+    } else if (lower.contains('phone') || lower.contains('mobile') || lower.contains('tablet') ||
+        lower.contains('फोन') || lower.contains('मोबाइल') || lower.contains('ফোন') ||
+        lower.contains('মোবাইল') || lower.contains('போன்') || lower.contains('ఫోన్')) {
+      detectedCategory = 'Li-ion Batteries';
+    // Wire / Cable → Copper Cables
+    } else if (lower.contains('copper') || lower.contains('wire') || lower.contains('cable') ||
+        lower.contains('तार') || lower.contains('तांबा') || lower.contains('तांबे') ||
+        lower.contains('কেবল') || lower.contains('তামা') || lower.contains('கம்பி') ||
+        lower.contains('செம்பு') || lower.contains('రాగి') || lower.contains('వైర్')) {
+      detectedCategory = 'Copper Cables';
+    // PCB / Circuit Board / Motherboard → PCBs
+    } else if (lower.contains('pcb') || lower.contains('circuit') || lower.contains('board') ||
+        lower.contains('motherboard') || lower.contains('बोर্ド') || lower.contains('बोर्ड') ||
+        lower.contains('मदरबोर्ड') || lower.contains('সার্কিট') || lower.contains('বোর্ড')) {
+      detectedCategory = 'PCBs';
+    // Battery → Li-ion Batteries
+    } else if (lower.contains('battery') || lower.contains('बैटरी') || lower.contains('बॅटरी') ||
+        lower.contains('ব্যাটারি') || lower.contains('பேட்டரி') || lower.contains('బ్యాటరీ')) {
+      detectedCategory = 'Li-ion Batteries';
+    // Motor → Motors
+    } else if (lower.contains('motor') || lower.contains('मोटर') || lower.contains('মটর') ||
+        lower.contains('மோட்டார்') || lower.contains('మోటార్')) {
+      detectedCategory = 'Motors';
+    // TV / CRT → CRT Units
+    } else if (lower.contains('crt') || lower.contains('tv') || lower.contains('television') ||
+        lower.contains('टीवी') || lower.contains('कांच') || lower.contains('টিভি')) {
       detectedCategory = 'CRT Units';
-    } else if (lower.contains('plastic') || lower.contains('प्लास्टिक') || lower.contains('प्लॅस्टिक')) {
+    // Plastic → Mixed Plastics
+    } else if (lower.contains('plastic') || lower.contains('प्लास्टिक') || lower.contains('प्लॅस्टिक') ||
+        lower.contains('প্লাস্টিক') || lower.contains('பிளாஸ்டிக்')) {
       detectedCategory = 'Mixed Plastics';
-    } else if (lower.contains('magnet') || lower.contains('चुंबक') || lower.contains('காந்தம்')) {
+    // Magnet → Magnet Assemblies
+    } else if (lower.contains('magnet') || lower.contains('चुंबक') || lower.contains('காந்தம்') ||
+        lower.contains('চুম্বক') || lower.contains('అయస్కాంతం')) {
       detectedCategory = 'Magnet Assemblies';
+    // Printer / Cartridge → Mixed Plastics
+    } else if (lower.contains('printer') || lower.contains('cartridge') || lower.contains('प्रिंटर') ||
+        lower.contains('কার্টিজ')) {
+      detectedCategory = 'Mixed Plastics';
+    // Fridge / AC / Compressor → Motors
+    } else if (lower.contains('fridge') || lower.contains('refrigerator') || lower.contains('ac') ||
+        lower.contains('compressor') || lower.contains('फ्रिज') || lower.contains('एसी') ||
+        lower.contains('ফ্রিজ')) {
+      detectedCategory = 'Motors';
     }
 
-    // Weight extractor (e.g. 5 kg, 10 kilo, 3.5 किलो, 2 கிலோ)
+    // ── Word-number parsing (English, Hindi, Marathi) ──
+    const Map<String, double> wordNumbers = {
+      // English
+      'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+      'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+      'eleven': 11, 'twelve': 12, 'fifteen': 15, 'twenty': 20,
+      'twenty five': 25, 'thirty': 30, 'fifty': 50, 'hundred': 100,
+      'half': 0.5,
+      // Hindi / Devanagari (shared with Marathi for common numerals)
+      'एक': 1, 'दो': 2, 'तीन': 3, 'चार': 4, 'पांच': 5, 'पाँच': 5,
+      'छह': 6, 'सात': 7, 'आठ': 8, 'नौ': 9, 'दस': 10,
+      'बीस': 20, 'तीस': 30, 'पचास': 50, 'सौ': 100,
+      'डेढ़': 1.5, 'ढाई': 2.5, 'साढ़े': 3.5, 'आधा': 0.5,
+      // Marathi-only (words that differ from Hindi)
+      'दोन': 2, 'पाच': 5, 'सहा': 6, 'नऊ': 9, 'दहा': 10,
+      'वीस': 20, 'पन्नास': 50, 'शंभर': 100,
+      // Kannada
+      'ಒಂದು': 1, 'ಎರಡು': 2, 'ಮೂರು': 3, 'ನಾಲ್ಕು': 4, 'ಐದು': 5,
+    };
+
+    // First try numeric digits (e.g. "5 kg", "10 kilo", "3.5 किलो")
     final numRegex = RegExp(r'(\d+(\.\d+)?)');
     final match = numRegex.firstMatch(speechQuery);
     if (match != null) {
       detectedWeight = double.tryParse(match.group(1) ?? '');
     }
 
-    if (lower.contains('damage') || lower.contains('खराब') || lower.contains('तुटलेला') || lower.contains('নষ্ট') || lower.contains('சேதமடைந்த')) {
-      detectedCondition = 'Damaged / for salvage';
+    // If no digit found, try word numbers
+    if (detectedWeight == null) {
+      for (final entry in wordNumbers.entries) {
+        if (lower.contains(entry.key)) {
+          detectedWeight = entry.value;
+          break;
+        }
+      }
     }
+
+    // Auto-default weight for items typically sold per piece
+    if (detectedWeight == null) {
+      if (detectedCategory == 'LCD Panels' || detectedCategory == 'CRT Units') {
+        detectedWeight = 1.0;
+      }
+    }
+
+    // ── Condition extraction (clean label, never raw transcript) ──
+    if (lower.contains('damage') || lower.contains('broken') || lower.contains('crack') ||
+        lower.contains('खराब') || lower.contains('टूटा') || lower.contains('तुटलेला') ||
+        lower.contains('নষ্ট') || lower.contains('ভাঙা') || lower.contains('சேதமடைந்த') ||
+        lower.contains('పాడైన')) {
+      detectedCondition = 'Damaged / for salvage';
+    } else if (lower.contains('mix') || lower.contains('मिक्स') || lower.contains('मिश्र') ||
+        lower.contains('মিশ্র')) {
+      detectedCondition = 'Mixed condition lot';
+    } else if (lower.contains('new') || lower.contains('unused') || lower.contains('नया') ||
+        lower.contains('नवीन') || lower.contains('নতুন')) {
+      detectedCondition = 'Like new / unused';
+    } else if (lower.contains('old') || lower.contains('used') || lower.contains('purana') ||
+        lower.contains('पुराना') || lower.contains('जुना') || lower.contains('পুরানো')) {
+      detectedCondition = 'Used / fair condition';
+    } else if (lower.contains('good') || lower.contains('working') || lower.contains('अच्छा') ||
+        lower.contains('चालू') || lower.contains('চলছে') || lower.contains('நல்ல')) {
+      detectedCondition = 'Good working condition';
+    }
+    // else keeps the default 'Good working condition'
 
     return {
       'category': detectedCategory,
       'weight': detectedWeight,
-      'condition': detectedCondition.isNotEmpty ? detectedCondition : 'Good condition scrap',
+      'condition': detectedCondition,
       'rawTranscript': speechQuery,
       'confidence': 0.94,
     };

@@ -45,7 +45,7 @@ class _HandoverPageState extends State<HandoverPage> {
 *Handover Status:* Verified & Recorded
 *Date:* ${widget.lot.createdAt.day}/${widget.lot.createdAt.month}/${widget.lot.createdAt.year}
 ---------------------------------------
-_Digital sovereign e-waste circular compliance under MPCB guidelines._
+_Digital sovereign e-waste circular compliance under CPCB & State PCB guidelines._
 ''';
     final url = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(text)}');
     if (await canLaunchUrl(url)) {
@@ -69,17 +69,13 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
     final lang = widget.language;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF081510),
+      backgroundColor: const Color(0xFF0C241B),
       appBar: AppBar(
         title: Text(
-          lang == IndicLanguage.hindi
-              ? 'डिजिटल हैंडओवर व पास'
-              : lang == IndicLanguage.marathi
-                  ? 'डिजिटल हस्तांतरण व पास'
-                  : 'Digital Handover & Pass',
+          LocalizationService.text(lang, 'digital_handover_title', fallback: 'Digital Handover & Pass'),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF081510),
+        backgroundColor: const Color(0xFF0C241B),
         foregroundColor: Colors.white,
       ),
       body: ListView(
@@ -89,10 +85,10 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF0F261E), Color(0xFF163C2E)],
+                colors: [Color(0xFF163E2E), Color(0xFF1F543F)],
               ),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0x334DF2C6), width: 1.2),
+              border: Border.all(color: const Color(0x554DF2C6), width: 1.4),
             ),
             child: Row(
               children: [
@@ -102,9 +98,9 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'VERIFIED PASS',
-                        style: TextStyle(color: Color(0xFFC6F24D), fontSize: 11, fontWeight: FontWeight.bold),
+                      Text(
+                        LocalizationService.text(lang, 'verified_pass', fallback: 'VERIFIED PASS'),
+                        style: const TextStyle(color: Color(0xFFC6F24D), fontSize: 11, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         widget.lot.id,
@@ -123,7 +119,7 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0x444DF2C6), width: 2),
+                border: Border.all(color: const Color(0x664DF2C6), width: 2),
                 boxShadow: const [
                   BoxShadow(color: Colors.black26, blurRadius: 14, offset: Offset(0, 4)),
                 ],
@@ -133,22 +129,45 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
           ),
           const SizedBox(height: 16),
           Card(
-            color: const Color(0xFF0F261E),
+            color: const Color(0xFF163E2E),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: const BorderSide(color: Color(0x334DF2C6), width: 1.2),
+              side: const BorderSide(color: Color(0x554DF2C6), width: 1.4),
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  _detailRow('Material', widget.lot.category),
-                  _detailRow('Approx. Weight', '${widget.lot.weight} kg'),
-                  _detailRow('Agreed Value', '₹${widget.lot.quotedPrice.toStringAsFixed(0)}'),
-                  _detailRow('Recycler', widget.recycler.name),
-                  _detailRow('MPCB Auth', widget.recycler.authorization),
-                  _detailRow('Composition', widget.lot.compositionBreakdown),
-                  _detailRow('Hazard Level', widget.lot.hazardLevel),
+                  _detailRow(
+                    LocalizationService.text(lang, 'material_label', fallback: 'Material'),
+                    LocalizationService.categoryName(lang, widget.lot.category),
+                    highlight: true,
+                  ),
+                  _detailRow(
+                    LocalizationService.text(lang, 'approx_weight', fallback: 'Approx. Weight'),
+                    '${widget.lot.weight} kg',
+                  ),
+                  _detailRow(
+                    LocalizationService.text(lang, 'agreed_value', fallback: 'Agreed Value'),
+                    '₹${widget.lot.quotedPrice.toStringAsFixed(0)}',
+                    isGold: true,
+                  ),
+                  _detailRow(
+                    LocalizationService.text(lang, 'recycler_label', fallback: 'Recycler'),
+                    widget.recycler.name,
+                  ),
+                  _detailRow(
+                    LocalizationService.text(lang, 'govt_auth', fallback: 'Govt Auth'),
+                    widget.recycler.authorization,
+                  ),
+                  _detailRow(
+                    LocalizationService.text(lang, 'composition', fallback: 'Composition'),
+                    widget.lot.compositionBreakdown,
+                  ),
+                  _detailRow(
+                    LocalizationService.text(lang, 'hazard_level', fallback: 'Hazard Level'),
+                    widget.lot.hazardLevel,
+                  ),
                 ],
               ),
             ),
@@ -156,22 +175,30 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
           const SizedBox(height: 14),
           OutlinedButton.icon(
             onPressed: _shareOnWhatsApp,
-            icon: const Icon(Icons.share_rounded, color: Color(0xFF4DF2C6)),
+            icon: const Icon(Icons.share_rounded, color: Color(0xFF38BDF8)),
             label: Text(
               LocalizationService.text(lang, 'whatsapp_share', fallback: 'Share Pass on WhatsApp'),
-              style: const TextStyle(color: Color(0xFF4DF2C6)),
+              style: const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold),
             ),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              side: const BorderSide(color: Color(0x334DF2C6)),
+              side: const BorderSide(color: Color(0xFF38BDF8), width: 1.4),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
           const SizedBox(height: 14),
           SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(value: 'Cash', icon: Icon(Icons.payments_rounded), label: Text('Cash')),
-              ButtonSegment(value: 'Digital UPI', icon: Icon(Icons.qr_code_rounded), label: Text('Digital UPI')),
+            segments: [
+              ButtonSegment(
+                value: 'Cash',
+                icon: const Icon(Icons.payments_rounded),
+                label: Text(LocalizationService.text(lang, 'cash_mode', fallback: 'Cash')),
+              ),
+              ButtonSegment(
+                value: 'Digital UPI',
+                icon: const Icon(Icons.qr_code_rounded),
+                label: Text(LocalizationService.text(lang, 'digital_upi_mode', fallback: 'Digital UPI')),
+              ),
             ],
             selected: {paymentMode},
             onSelectionChanged: (s) => setState(() => paymentMode = s.first),
@@ -180,8 +207,14 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
           CheckboxListTile(
             value: confirmed,
             onChanged: (v) => setState(() => confirmed = v ?? false),
-            title: const Text('Authorized buyer verified material and confirmed settlement', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-            subtitle: const Text('Compliant transaction under E-Waste (Management) Rules.', style: TextStyle(color: Colors.white60)),
+            title: Text(
+              LocalizationService.text(lang, 'handover_confirm_text', fallback: 'Authorized buyer verified material and confirmed settlement'),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            subtitle: Text(
+              LocalizationService.text(lang, 'cpcb_rule_text', fallback: 'Compliant transaction under E-Waste (Management) Rules.'),
+              style: const TextStyle(color: Colors.white60),
+            ),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           const SizedBox(height: 10),
@@ -214,7 +247,10 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
                       builder: (ctx) => AlertDialog(
                         backgroundColor: const Color(0xFF0F261E),
                         icon: const Icon(Icons.check_circle_rounded, color: Color(0xFFC6F24D), size: 55),
-                        title: const Text('Handover Verified!', style: TextStyle(color: Colors.white)),
+                        title: Text(
+                          LocalizationService.text(lang, 'handover_verified_dialog', fallback: 'Handover Verified!'),
+                          style: const TextStyle(color: Colors.white),
+                        ),
                         content: Text('Lot ${widget.lot.id} successfully recorded. Earned +$credits ESG Green Credits.', style: const TextStyle(color: Colors.white70)),
                         actions: [
                           TextButton(
@@ -222,14 +258,20 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
                               Navigator.pop(ctx);
                               Navigator.pop(context);
                             },
-                            child: const Text('Done', style: TextStyle(color: Color(0xFFC6F24D))),
+                            child: Text(
+                              LocalizationService.text(lang, 'done', fallback: 'Done'),
+                              style: const TextStyle(color: Color(0xFFC6F24D)),
+                            ),
                           )
                         ],
                       ),
                     );
                   },
             icon: const Icon(Icons.handshake_rounded),
-            label: const Text('Complete Verified Handover', style: TextStyle(fontWeight: FontWeight.bold)),
+            label: Text(
+              LocalizationService.text(lang, 'btn_complete_handover', fallback: 'Complete Verified Handover'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFFC6F24D),
               foregroundColor: const Color(0xFF081510),
@@ -242,14 +284,21 @@ _Digital sovereign e-waste circular compliance under MPCB guidelines._
     );
   }
 
-  Widget _detailRow(String label, String value) {
+  Widget _detailRow(String label, String value, {bool highlight = false, bool isGold = false}) {
+    Color valueColor = Colors.white;
+    if (isGold) {
+      valueColor = const Color(0xFFFFD54F);
+    } else if (highlight) {
+      valueColor = const Color(0xFF4DF2C6);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(width: 120, child: Text(label, style: const TextStyle(color: Colors.white60, fontSize: 13))),
-          Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Colors.white))),
+          Expanded(child: Text(value, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: valueColor))),
         ],
       ),
     );

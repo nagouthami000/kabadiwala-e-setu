@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_repository.dart';
+import 'glass_ui.dart';
 import 'localization_service.dart';
 import 'supabase_service.dart';
 
@@ -153,55 +154,17 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    const bgDark = Color(0xFF081510);
-    const emeraldSurface = Color(0xFF0F261E);
-    const cardBorder = Color(0x334DF2C6);
+    const bgDark = Color(0xFF0C241B);
+    const emeraldSurface = Color(0xFF163E2E);
+    const cardBorder = Color(0x554DF2C6);
     const limeAccent = Color(0xFFC6F24D);
     const mintGlow = Color(0xFF4DF2C6);
 
     return Scaffold(
-      backgroundColor: bgDark,
-      body: Stack(
-        children: [
-          // Background ambient gradient mesh
-          Positioned(
-            top: -100,
-            right: -100,
-            child: Container(
-              width: 320,
-              height: 320,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    limeAccent.withAlpha(45),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -80,
-            left: -80,
-            child: Container(
-              width: 360,
-              height: 360,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    mintGlow.withAlpha(35),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // Main scrollable content
-          SafeArea(
-            child: Center(
+      backgroundColor: VibrantColors.inkDark,
+      body: EWasteAnimatedBackground(
+        child: SafeArea(
+          child: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 child: ConstrainedBox(
@@ -317,20 +280,12 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                       const SizedBox(height: 28),
 
                       // Glassmorphism Card Container
-                      Container(
+                      GlassContainer(
                         padding: const EdgeInsets.all(22),
-                        decoration: BoxDecoration(
-                          color: emeraldSurface.withAlpha(220),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: cardBorder, width: 1.2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withAlpha(140),
-                              blurRadius: 30,
-                              offset: const Offset(0, 14),
-                            ),
-                          ],
-                        ),
+                        borderRadius: 24,
+                        blur: 20,
+                        tintColor: const Color(0xFF0F3626),
+                        tintAlpha: 140,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -508,7 +463,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                   gradient: LinearGradient(
                                     colors: isLoading 
                                         ? [Colors.grey.shade700, Colors.grey.shade800]
-                                        : [limeAccent, const Color(0xFFA6E025)],
+                                        : [VibrantColors.neonLime, VibrantColors.mintCyan],
                                   ),
                                   borderRadius: BorderRadius.circular(14),
                                   boxShadow: isLoading ? [] : [
@@ -560,59 +515,15 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                         ),
                       ),
 
-                      const SizedBox(height: 20),
 
-                      // Real Supabase Cloud Status Card
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: emeraldSurface.withAlpha(180),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: cardBorder),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.cloud_done_rounded,
-                              size: 18,
-                              color: mintGlow,
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Connected to Supabase Sovereign Cloud',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Backend: kgbifbyyoyulkpzsbuke • Row-Level Security Enabled',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white.withAlpha(160),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
+        ),
+      );
   }
 
   Widget _buildRoleChip({

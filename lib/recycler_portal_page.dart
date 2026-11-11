@@ -4,11 +4,14 @@ import 'localization_service.dart';
 import 'models.dart';
 import 'sarvam_service.dart';
 
-const primaryDark = Color(0xFF0F382A);
+const primaryDark = Color(0xFF0B7A0B);
 const accentLime = Color(0xFFC6F24D);
 const mintGlow = Color(0xFF4DF2C6);
-const inkDark = Color(0xFF081510);
-const cardBorder = Color(0x334DF2C6);
+const inkDark = Color(0xFF0C241B);
+const surfaceEmerald = Color(0xFF163E2E);
+const cardBorder = Color(0x554DF2C6);
+const goldenAmber = Color(0xFFFFD54F);
+const skyBlue = Color(0xFF38BDF8);
 
 class RecyclerPortalPage extends StatefulWidget {
   final IndicLanguage language;
@@ -63,7 +66,7 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Lot #${lot.id.substring(0, 8)} marked Verified & Paid!'),
-        backgroundColor: const Color(0xFF0F382A),
+        backgroundColor: surfaceEmerald,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -88,7 +91,7 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF081510),
+      backgroundColor: inkDark,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -99,15 +102,15 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [inkDark, Color(0xFF0F261E)],
+                  colors: [surfaceEmerald, Color(0xFF1F543F)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0x334DF2C6), width: 1.2),
+                border: Border.all(color: cardBorder, width: 1.4),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha(60),
+                    color: Colors.black.withAlpha(50),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -155,9 +158,9 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                           color: accentLime,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Text(
-                          'PORTAL MODE',
-                          style: TextStyle(
+                        child: Text(
+                          LocalizationService.text(widget.language, 'portal_mode', fallback: 'PORTAL MODE'),
+                          style: const TextStyle(
                             color: Color(0xFF081510),
                             fontSize: 10,
                             fontWeight: FontWeight.w900,
@@ -173,17 +176,17 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildHeaderMetric(
-                        label: 'Total Lots Checked',
+                        label: LocalizationService.text(widget.language, 'total_lots_checked', fallback: 'Total Lots Checked'),
                         value: '${widget.lots.length}',
                         color: Colors.white,
                       ),
                       _buildHeaderMetric(
-                        label: 'Pending Intake',
+                        label: LocalizationService.text(widget.language, 'pending_intake', fallback: 'Pending Intake'),
                         value: '${widget.lots.where((l) => l.status != 'handed_over').length}',
                         color: accentLime,
                       ),
                       _buildHeaderMetric(
-                        label: 'Verified & Settled',
+                        label: LocalizationService.text(widget.language, 'verified_settled', fallback: 'Verified & Settled'),
                         value: '${widget.lots.where((l) => l.status == 'handed_over').length}',
                         color: mintGlow,
                       ),
@@ -204,7 +207,7 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                     style: const TextStyle(color: Colors.white),
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
-                      hintText: 'Search Lot ID, Material or Location...',
+                      hintText: LocalizationService.text(widget.language, 'search_lots_hint', fallback: 'Search Lot ID, Material or Location...'),
                       hintStyle: const TextStyle(color: Colors.white38),
                       prefixIcon: const Icon(Icons.search_rounded, color: accentLime),
                       suffixIcon: searchCtrl.text.isNotEmpty
@@ -217,15 +220,15 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                             )
                           : null,
                       filled: true,
-                      fillColor: const Color(0xFF0F261E),
+                      fillColor: surfaceEmerald,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: Color(0x334DF2C6)),
+                        borderSide: const BorderSide(color: cardBorder),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: Color(0x334DF2C6)),
+                        borderSide: const BorderSide(color: cardBorder),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
@@ -242,11 +245,11 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
             // Filter Chips
             Row(
               children: [
-                _buildFilterChip('all', 'All Intake Lots'),
+                _buildFilterChip('all', LocalizationService.text(widget.language, 'filter_all', fallback: 'All Intake Lots')),
                 const SizedBox(width: 8),
-                _buildFilterChip('pending', 'Pending Verification'),
+                _buildFilterChip('pending', LocalizationService.text(widget.language, 'filter_pending', fallback: 'Pending Verification')),
                 const SizedBox(width: 8),
-                _buildFilterChip('settled', 'Completed & Paid'),
+                _buildFilterChip('settled', LocalizationService.text(widget.language, 'filter_completed', fallback: 'Completed & Paid')),
               ],
             ),
 
@@ -258,9 +261,9 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                 padding: const EdgeInsets.all(32),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0F261E),
+                  color: surfaceEmerald,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: const Color(0x334DF2C6)),
+                  border: Border.all(color: cardBorder, width: 1.4),
                 ),
                 child: Column(
                   children: [
@@ -268,8 +271,8 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                     const SizedBox(height: 12),
                     Text(
                       widget.lots.isEmpty
-                          ? 'No scrap lots created yet.\nCreate a lot from the Collector view to inspect it here.'
-                          : 'No lots matching this search filter.',
+                          ? LocalizationService.text(widget.language, 'no_lots_yet', fallback: 'No scrap lots created yet.\nCreate a lot from the Collector view to inspect it here.')
+                          : LocalizationService.text(widget.language, 'no_lots_match', fallback: 'No lots matching this search filter.'),
                       textAlign: TextAlign.center,
                       style: const TextStyle(color: Colors.white70, fontSize: 13),
                     ),
@@ -288,15 +291,16 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     elevation: 0,
+                    color: surfaceEmerald,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                       side: BorderSide(
-                        color: isSettled ? const Color(0x334DF2C6) : const Color(0xFFE2E6DF),
-                        width: isSettled ? 1.5 : 1,
+                        color: isSettled ? mintGlow : cardBorder,
+                        width: isSettled ? 1.6 : 1.4,
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -308,42 +312,47 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: primaryDark.withAlpha(20),
+                                      color: mintGlow.withAlpha(35),
                                       borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: mintGlow.withAlpha(80)),
                                     ),
-                                    child: const Icon(Icons.inventory_2_rounded, color: primaryDark, size: 18),
+                                    child: const Icon(Icons.inventory_2_rounded, color: mintGlow, size: 18),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: 10),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Lot #${lot.id.substring(0, 8)}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: Colors.white),
                                       ),
                                       Text(
-                                        lot.category,
-                                        style: const TextStyle(fontSize: 12, color: primaryDark, fontWeight: FontWeight.w600),
+                                        LocalizationService.categoryName(widget.language, lot.category),
+                                        style: const TextStyle(fontSize: 13, color: mintGlow, fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
-                                  color: isSettled ? Colors.green.shade50 : Colors.amber.shade50,
+                                  color: isSettled ? const Color(0x334DF2C6) : const Color(0x33FFD54F),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: isSettled ? Colors.green.shade300 : Colors.amber.shade400,
+                                    color: isSettled ? mintGlow : goldenAmber,
+                                    width: 1.2,
                                   ),
                                 ),
                                 child: Text(
-                                  isSettled ? 'VERIFIED & PAID' : 'PENDING INTAKE',
+                                  isSettled
+                                      ? LocalizationService.text(widget.language, 'badge_verified', fallback: 'VERIFIED & PAID')
+                                      : LocalizationService.text(widget.language, 'badge_pending', fallback: 'PENDING INTAKE'),
                                   style: TextStyle(
                                     fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: isSettled ? Colors.green.shade800 : Colors.amber.shade900,
+                                    fontWeight: FontWeight.w900,
+                                    color: isSettled ? mintGlow : goldenAmber,
+                                    letterSpacing: 0.5,
                                   ),
                                 ),
                               ),
@@ -354,23 +363,35 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Weight: ${lot.weight.toStringAsFixed(1)} kg',
-                                style: const TextStyle(fontSize: 13, color: Colors.black87),
+                                '${LocalizationService.text(widget.language, 'weight_label', fallback: 'Weight')}: ${lot.weight.toStringAsFixed(1)} kg',
+                                style: const TextStyle(fontSize: 13, color: Colors.white70, fontWeight: FontWeight.w500),
                               ),
-                              Text(
-                                'Payout: ₹${(lot.finalPrice > 0 ? lot.finalPrice : lot.quotedPrice).toStringAsFixed(0)}',
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: primaryDark),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${LocalizationService.text(widget.language, 'payout_label', fallback: 'Payout')}: ',
+                                    style: const TextStyle(fontSize: 13, color: Colors.white60),
+                                  ),
+                                  Text(
+                                    '₹${(lot.finalPrice > 0 ? lot.finalPrice : lot.quotedPrice).toStringAsFixed(0)}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900,
+                                      color: goldenAmber,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                           if (lot.compositionBreakdown.isNotEmpty) ...[
                             const SizedBox(height: 6),
                             Text(
-                              'AI Analysis: ${lot.compositionBreakdown}',
-                              style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+                              '${LocalizationService.text(widget.language, 'ai_analysis', fallback: 'AI Analysis')}: ${lot.compositionBreakdown}',
+                              style: const TextStyle(fontSize: 11, color: Color(0xFFB0D5C7)),
                             ),
                           ],
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 14),
                           Row(
                             children: [
                               if (!isSettled)
@@ -378,13 +399,18 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                                   child: ElevatedButton.icon(
                                     onPressed: () => _verifyAndSettleLot(lot),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: primaryDark,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      backgroundColor: accentLime,
+                                      foregroundColor: inkDark,
+                                      elevation: 3,
+                                      shadowColor: accentLime.withAlpha(100),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
                                     ),
-                                    icon: const Icon(Icons.check_circle_outline_rounded, size: 16),
-                                    label: const Text('Verify & Settle Payout', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                    icon: const Icon(Icons.check_circle_rounded, size: 18, color: inkDark),
+                                    label: Text(
+                                      LocalizationService.text(widget.language, 'btn_verify_settle', fallback: 'Verify & Settle Payout'),
+                                      style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: inkDark),
+                                    ),
                                   ),
                                 )
                               else
@@ -396,12 +422,16 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
                                       collectorLocation: lot.location.isNotEmpty ? lot.location : 'Pune, Maharashtra',
                                     ),
                                     style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(color: primaryDark),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      side: const BorderSide(color: skyBlue, width: 1.4),
+                                      foregroundColor: skyBlue,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      padding: const EdgeInsets.symmetric(vertical: 11),
                                     ),
-                                    icon: const Icon(Icons.picture_as_pdf_rounded, size: 16, color: primaryDark),
-                                    label: const Text('Export MPCB Audit Manifest', style: TextStyle(color: primaryDark, fontSize: 12)),
+                                    icon: const Icon(Icons.picture_as_pdf_rounded, size: 18, color: skyBlue),
+                                    label: Text(
+                                      LocalizationService.text(widget.language, 'btn_export_manifest', fallback: 'Export MPCB Audit Manifest'),
+                                      style: const TextStyle(color: skyBlue, fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ),
                             ],
@@ -426,10 +456,11 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? accentLime : const Color(0xFF0F261E),
+          color: isSelected ? accentLime : surfaceEmerald,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? accentLime : const Color(0x334DF2C6),
+            color: isSelected ? accentLime : cardBorder,
+            width: 1.2,
           ),
         ),
         child: Text(
@@ -437,7 +468,7 @@ class _RecyclerPortalPageState extends State<RecyclerPortalPage> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? const Color(0xFF081510) : Colors.white70,
+            color: isSelected ? inkDark : Colors.white70,
           ),
         ),
       ),

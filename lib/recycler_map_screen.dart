@@ -32,11 +32,11 @@ class _RecyclerMapScreenState extends State<RecyclerMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryDark = Color(0xFF0F382A);
+    const primaryDark = Color(0xFF0B7A0B);
     const accentLime = Color(0xFFC6F24D);
     const mintGlow = Color(0xFF4DF2C6);
-    const inkDark = Color(0xFF081510);
-    const surfaceEmerald = Color(0xFF0F261E);
+    const inkDark = Color(0xFF0C241B);
+    const surfaceEmerald = Color(0xFF163E2E);
 
     return Scaffold(
       backgroundColor: inkDark,

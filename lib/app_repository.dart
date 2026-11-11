@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models.dart';
@@ -174,11 +175,32 @@ class AppRepository {
   }
 
   Future<void> saveLots(List<WasteLot> lots) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_lotsKey, WasteLot.encodeList(lots));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      // Keep up to 25 lots and strip large base64 strings (>5KB) to prevent HTML5 localStorage QuotaExceededError (5MB limit)
+      final lightweightLots = lots.take(25).map((l) {
+        if (l.imageBase64.length > 5000) {
+          return l.copyWith(imageBase64: '');
+        }
+        return l;
+      }).toList();
+
+      await prefs.setString(_lotsKey, WasteLot.encodeList(lightweightLots));
+    } catch (e) {
+      debugPrint('[AppRepository] LocalStorage quota handled: $e');
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        // If storage is completely full, keep the 5 most recent lots with empty images
+        final minimalLots = lots.take(5).map((l) => l.copyWith(imageBase64: '')).toList();
+        await prefs.setString(_lotsKey, WasteLot.encodeList(minimalLots));
+      } catch (_) {}
+    }
+
     // Resilient background sync to Supabase
-    if (lots.isNotEmpty) {
-      supabase.syncLot(lots.first).catchError((_) => false);
+    for (final lot in lots) {
+      if (!lot.synced) {
+        supabase.syncLot(lot).catchError((_) => false);
+      }
     }
   }
 
@@ -249,6 +271,7 @@ class AppRepository {
       final bScore = b.rateFactor * 50 + (b.pickup ? 20 : 0) - b.distanceKm;
       return bScore.compareTo(aScore);
     });
-    return matches;
+    if (matches.isNotEmpty) return matches;
+    return recyclers.take(3).toList();
   }
 }

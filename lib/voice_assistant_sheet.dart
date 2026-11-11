@@ -254,7 +254,9 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
   Widget build(BuildContext context) {
     const accentLime = Color(0xFFC6F24D);
     const mintGlow = Color(0xFF4DF2C6);
-    const inkDark = Color(0xFF081510);
+    const inkDark = Color(0xFF0C241B);
+    const surfaceEmerald = Color(0xFF163E2E);
+    const cardBorder = Color(0x554DF2C6);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -384,7 +386,7 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
               hintText: 'Or type/speak lot details here...',
               hintStyle: const TextStyle(color: Colors.white38),
               filled: true,
-              fillColor: inkDark,
+              fillColor: surfaceEmerald,
               prefixIcon: const Icon(Icons.edit_note_rounded, color: accentLime),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.arrow_forward_rounded, color: accentLime),
@@ -393,11 +395,11 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: Color(0x334DF2C6)),
+                borderSide: const BorderSide(color: cardBorder),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: Color(0x334DF2C6)),
+                borderSide: const BorderSide(color: cardBorder),
               ),
             ),
           ),
@@ -441,7 +443,8 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.symmetric(vertical: 13),
             ),
-            onPressed: () {
+            onPressed: () async {
+              final navigator = Navigator.of(context);
               if (_lastExtractedCat != null) {
                 widget.onExtracted(
                   category: _lastExtractedCat!,
@@ -450,14 +453,20 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
                   transcript: _lastExtractedQuery ?? textCtrl.text.trim(),
                 );
               } else if (textCtrl.text.trim().isNotEmpty) {
+                // Parse typed text through the same voice parser to detect category/weight/condition
+                final parsed = await widget.sarvam.parseVoiceInput(
+                  speechQuery: textCtrl.text.trim(),
+                  language: widget.language,
+                );
                 widget.onExtracted(
-                  category: 'Copper Cables',
-                  weight: 0.0,
-                  condition: textCtrl.text.trim(),
+                  category: parsed['category'] as String,
+                  weight: parsed['weight'] != null ? (parsed['weight'] as num).toDouble() : 0.0,
+                  condition: parsed['condition'] as String,
                   transcript: textCtrl.text.trim(),
                 );
               }
-              Navigator.pop(context);
+              if (!mounted) return;
+              navigator.pop();
             },
             child: const Text('Confirm & Apply to Lot', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
